@@ -22,7 +22,8 @@ def signup(request):
 
 def detail(request, movie_id):
   movie = get_object_or_404(Movie, pk=movie_id)
-  return render(request, 'detail.html', {'movie': movie})
+  review = Review.objects.filter(movie=movie)
+  return render(request, 'detail.html', {'movie': movie, 'reviews': review})
 
 def createreview(request, movie_id):
   movie = get_object_or_404(Movie, pk=movie_id)
@@ -35,6 +36,6 @@ def createreview(request, movie_id):
       newReview.user = request.user
       newReview.movie = movie
       newReview.save()
-      return redirect('detail', newReview.movie.id))
+      return redirect('detail', newReview.movie.id)
     except ValueError:
       return render(request, 'createreview.html', {'form': ReviewForm, 'error': 'Bad data passed in. Try again.'})
